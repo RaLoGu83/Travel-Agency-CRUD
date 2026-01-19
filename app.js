@@ -1,9 +1,8 @@
 class travel {
-    constructor(code, destination, price, disponibility = true) {
+    constructor(code, destination, price) {
         this.code = code;
         this.destination = destination;
         this.price = price;
-        this.disponibility = disponibility;
     };
 
     getInfo() {
@@ -67,3 +66,14 @@ class booking {
         return `${this.client.getResumen()}\nBooked: ${this.travel.getInfo()}`;
     };
 };
+
+let arrayCliente = [];
+
+btnAddClient = document.getElementById("addClient");
+btnAddTravel = document.getElementById("addTravel");
+btnAddBooking = document.getElementById("addbooking");
+
+btnAddClient.addEventListener("click", addClient());
+function addClient(){
+    
+}
