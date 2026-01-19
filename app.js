@@ -75,5 +75,5 @@ btnAddBooking = document.getElementById("addbooking");
 
 btnAddClient.addEventListener("click", addClient());
 function addClient(){
-    
+    // Hay que hacer esta funcion y mirar  las opciones de los dropdowns
 }
