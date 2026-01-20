@@ -19,27 +19,27 @@
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+                aria-describedby="inputGroup-sizing-default" id="nameInput">
         </div>
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Surnames</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+                aria-describedby="inputGroup-sizing-default" id="surnameInput">
         </div>
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Email</span>
-            <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+            <input type="email" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default" id="emailInput">
         </div>
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Phone number</span>
-            <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+            <input type="tel" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default" id="pNumberInput">
         </div>
         <button type="button" class="btn btn-secondary" id="addClient">Add</button>
     </div>
 
-    <table class="table table-hover table-bordered" id="clients">
+    <table class="table table-hover table-bordered" id="tableClients">
         <thead class="table-dark">
             <tr>
                 <th scope="col">Name</th>
@@ -136,6 +136,8 @@
         </tbody>
     </table>
     <br><br>
+
+    <script src="app.js"></script>
 </body>
 
 </html>
