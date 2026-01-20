@@ -58,32 +58,30 @@
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Code</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+                aria-describedby="inputGroup-sizing-default" id="codeInput">
         </div>
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Destination</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+                aria-describedby="inputGroup-sizing-default" id="destinationInput">
         </div>
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Price</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default">
+                aria-describedby="inputGroup-sizing-default" id="priceInput">
         </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
+        <div class="dropdown mb-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" id="typeTravel">
                 Select type of travel
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item">Action</a></li>
-                <li><a class="dropdown-item">Another action</a></li>
-                <li><a class="dropdown-item">Something else here</a></li>
+                <li><a class="dropdown-item" data-value="Packed">Packed</a></li>
+                <li><a class="dropdown-item" data-value="Not Packed">Not Packed</a></li>
             </ul>
         </div>
         <button type="button" class="btn btn-secondary" id="addTravel">Add</button>
     </div>
-    <table class="table table-hover table-bordered" id="travels">
+    <table class="table table-hover table-bordered" id="tableTravels">
         <thead class="table-dark">
             <tr>
                 <th scope="col">Code</th>
@@ -123,7 +121,7 @@
         </div>
         <button type="button" class="btn btn-secondary" id="addBooking">Add</button>
     </div>
-    <table class="table table-hover table-bordered" id="booking">
+    <table class="table table-hover table-bordered" id="tableBookings">
         <thead class="table-dark">
             <tr>
                 <th scope="col">Client</th>

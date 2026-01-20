@@ -10,41 +10,6 @@ class travel {
     };
 };
 
-class fligth extends travel{
-    constructor(code, destination, price, airline, duration) {
-        super(code, destination, price);
-        this.airline = airline;
-        this.duration = duration;
-    };
-
-    getInfo() {
-        return `${super.getInfo()}, Airline: ${this.airline}, Duration: ${this.duration} hours`;
-    };
-};
-
-class hotel extends travel{
-    constructor(code, destination, price, stars, roomType) {
-        super(code, destination, price);
-        this.stars = stars;
-        this.roomType = roomType;
-    };
-    getInfo() {
-        return `${super.getInfo()}, Hotel ${this.stars} stars, Room: ${this.roomType}`;
-    };
-};
-
-class pack extends travel{
-    constructor(code, destination, price, fligth, hotel) {
-        super(code, destination, price);
-        this.fligth = fligth;
-        this.hotel = hotel;
-    };
-
-    getInfo() {
-        return `${super.getInfo()}\n - Fligth: ${this.fligth.getInfo()}\n - Hotel: ${this.hotel.getInfo()}`;
-    };
-};
-
 class client {
     constructor(name, surname, email, pNumber) {
         this.name = name;
@@ -70,13 +35,17 @@ class booking {
 let arrayClient = [];
 let arrayTravel = [];
 let arrayBooking = [];
+let selectedTravelType = "";
+
 
 btnAddClient = document.getElementById("addClient");
 btnAddTravel = document.getElementById("addTravel");
 btnAddBooking = document.getElementById("addbooking");
 const tableClients = document.getElementById("tableClients");
+const tableTravel = document.getElementById("tableTravel");
 
 btnAddClient.addEventListener("click", addClient);
+btnAddTravel.addEventListener("click", addTravel);
 function addClient() {
     const name = document.getElementById("nameInput").value;
     const surname = document.getElementById("surnameInput").value;
@@ -94,9 +63,40 @@ function addClient() {
         <td>${email}</td>
         <td>${pNumber}</td>
         <td>
-            <button class="btn btn-danger btn-sm">Delete</button>
+            <button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">Delete</button>
         </td>
     `;
 
     tableClients.appendChild(row);
-}
+};
+
+function addTravel(){
+    const code = document.getElementById("codeInput").value;
+    const destination = document.getElementById("destinationInput").value;
+    const price = document.getElementById("priceInput").value;
+    const typeTravel = document.getElementById("typeTravel").value;
+
+    const newTravel = new travel(code, destination, price, typeTravel);
+    arrayTravel.push(newTravel);
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td>${code}</td>
+        <td>${destination}</td>
+        <td>${price}</td>
+        <td>${typeTravel}</td>
+        <td>
+            <button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">Delete</button>
+        </td>
+    `;
+
+    tableTravels.appendChild(row);
+};
+
+document.querySelectorAll(".dropdown-item").forEach(item => {
+    item.addEventListener("click", function () {
+        selectedTravelType = this.dataset.value;
+        document.getElementById("typeTravel").textContent = selectedTravelType;
+    });
+});
