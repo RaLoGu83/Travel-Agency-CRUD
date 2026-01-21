@@ -1,4 +1,4 @@
-class travel {
+class Travel {
     constructor(code, destination, price, type) {
         this.id = Date.now();
         this.code = code;
@@ -12,7 +12,7 @@ class travel {
     }
 }
 
-class client {
+class Client {
     constructor(name, surname, email, pNumber) {
         this.id = Date.now();
         this.name = name;
@@ -28,63 +28,266 @@ class client {
 
 let arrayClient = [];
 let arrayTravel = [];
+let arrayBooking = [];
+
+const nameInput = document.getElementById("nameInput");
+const surnameInput = document.getElementById("surnameInput");
+const emailInput = document.getElementById("emailInput");
+const pNumberInput = document.getElementById("pNumberInput");
+
+const codeInput = document.getElementById("codeInput");
+const destinationInput = document.getElementById("destinationInput");
+const priceInput = document.getElementById("priceInput");
+const selTravelType = document.getElementById("selTravelType");
 
 const btnAddClient = document.getElementById("addClient");
 const btnAddTravel = document.getElementById("addTravel");
 
-const selNameClient = document.getElementById("selNameClient");
-const selNameTravel = document.getElementById("selNameTravel");
-const selNameTravelType = document.getElementById("selNameTravelType");
+const tableClients = document.getElementById("tableClients");
+const tableTravels = document.getElementById("tableTravels");
+
+const selClient = document.getElementById("selClient");
+const selTravel = document.getElementById("selTravel");
+
+const btnAddBooking = document.getElementById("addBooking");
+const tableBookings = document.getElementById("tableBookings");
 
 btnAddClient.addEventListener("click", addClient);
 btnAddTravel.addEventListener("click", addTravel);
+btnAddBooking.addEventListener("click", addBooking);
 
 function addClient() {
-    const name = nameInput.value;
-    const surname = surnameInput.value;
-    const email = emailInput.value;
-    const pNumber = pNumberInput.value;
+    if (!nameInput.value || !surnameInput.value || !emailInput.value || !pNumberInput.value) {
+        alert("Fill all CLIENT fields");
+        return;
+    }
 
-    const newClient = new client(name, surname, email, pNumber);
-    arrayClient.push(newClient);
+    const client = new Client(
+        nameInput.value,
+        surnameInput.value,
+        emailInput.value,
+        pNumberInput.value
+    );
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${name}</td>
-        <td>${surname}</td>
-        <td>${email}</td>
-        <td>${pNumber}</td>
-        <td><button class="btn btn-danger btn-sm">Delete</button></td>
+    arrayClient.push(client);
+
+    tableClients.querySelector("tbody").innerHTML += `
+        <tr>
+            <td>${client.name}</td>
+            <td>${client.surname}</td>
+            <td>${client.email}</td>
+            <td>${client.pNumber}</td>
+            <td>
+                <button class="btn btn-danger btn-sm delete-client" data-id="${client.id}">
+                    Delete
+                </button>
+            </td>
+        </tr>
     `;
-    tableClients.querySelector("tbody").appendChild(row);
 
-    const option = document.createElement("option");
-    option.value = newClient.id;
-    option.textContent = `${name} ${surname}`;
-    selNameClient.appendChild(option);
+    selClient.innerHTML += `
+        <option value="${client.id}">
+            ${client.name} ${client.surname}
+        </option>
+    `;
+
+    nameInput.value = "";
+    surnameInput.value = "";
+    emailInput.value = "";
+    pNumberInput.value = "";
+
+    saveToLocalStorage();
 }
 
 function addTravel() {
-    const code = codeInput.value;
-    const destination = destinationInput.value;
-    const price = priceInput.value;
-    const type = selNameTravelType.value;
+    if (!codeInput.value || !destinationInput.value || !priceInput.value || !selTravelType.value) {
+        alert("Fill all TRAVEL fields");
+        return;
+    }
 
-    const newTravel = new travel(code, destination, price, type);
-    arrayTravel.push(newTravel);
+    const travel = new Travel(
+        codeInput.value,
+        destinationInput.value,
+        priceInput.value,
+        selTravelType.value
+    );
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${code}</td>
-        <td>${destination}</td>
-        <td>${price}</td>
-        <td>${type}</td>
-        <td><button class="btn btn-danger btn-sm">Delete</button></td>
+    arrayTravel.push(travel);
+
+    tableTravels.querySelector("tbody").innerHTML += `
+        <tr>
+            <td>${travel.code}</td>
+            <td>${travel.destination}</td>
+            <td>${travel.price}</td>
+            <td>${travel.type}</td>
+            <td>
+                <button class="btn btn-danger btn-sm delete-travel" data-id="${travel.id}">
+                    Delete
+                </button>
+            </td>
+        </tr>
     `;
-    tableTravels.querySelector("tbody").appendChild(row);
 
-    const option = document.createElement("option");
-    option.value = newTravel.id;
-    option.textContent = `${code} - ${destination}`;
-    selNameTravel.appendChild(option);
+    selTravel.innerHTML += `
+        <option value="${travel.id}">
+            ${travel.code} - ${travel.destination}
+        </option>
+    `;
+
+    codeInput.value = "";
+    destinationInput.value = "";
+    priceInput.value = "";
+    selTravelType.value = "";
+
+    saveToLocalStorage();
 }
+
+function addBooking() {
+    if (!selClient.value || !selTravel.value) {
+        alert("Select a CLIENT and a TRAVEL in the BOOKING selectors");
+        return;
+    }
+
+    const client = arrayClient.find(c => c.id == selClient.value);
+    const travel = arrayTravel.find(t => t.id == selTravel.value);
+
+    const booking = {
+        id: Date.now(),
+        clientId: client.id,
+        travelId: travel.id,
+        date: new Date().toLocaleDateString()
+    };
+
+    arrayBooking.push(booking);
+
+    tableBookings.querySelector("tbody").innerHTML += `
+        <tr>
+            <td>${client.name} ${client.surname}</td>
+            <td>${travel.code} - ${travel.destination}</td>
+            <td>${booking.date}</td>
+            <td>
+                <button class="btn btn-danger btn-sm delete-booking" data-id="${booking.id}">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    `;
+
+    selClient.value = "";
+    selTravel.value = "";
+
+    saveToLocalStorage();
+}
+
+tableClients.addEventListener("click", e => {
+    if (e.target.classList.contains("delete-client")) {
+        const id = Number(e.target.dataset.id);
+
+        arrayClient = arrayClient.filter(c => c.id !== id);
+        e.target.closest("tr").remove();
+
+        [...selClient.options].forEach(o => Number(o.value) === id && o.remove());
+    }
+
+    saveToLocalStorage();
+});
+
+tableTravels.addEventListener("click", e => {
+    if (e.target.classList.contains("delete-travel")) {
+        const id = Number(e.target.dataset.id);
+
+        arrayTravel = arrayTravel.filter(t => t.id !== id);
+        e.target.closest("tr").remove();
+
+        [...selTravel.options].forEach(o => Number(o.value) === id && o.remove());
+    }
+
+    saveToLocalStorage();
+});
+
+tableBookings.addEventListener("click", e => {
+    if (e.target.classList.contains("delete-booking")) {
+        const id = Number(e.target.dataset.id);
+
+        arrayBooking = arrayBooking.filter(b => b.id !== id);
+        e.target.closest("tr").remove();
+    }
+
+    saveToLocalStorage();
+});
+
+function saveToLocalStorage() {
+    localStorage.setItem("clients", JSON.stringify(arrayClient));
+    localStorage.setItem("travels", JSON.stringify(arrayTravel));
+    localStorage.setItem("bookings", JSON.stringify(arrayBooking));
+}
+
+function loadFromLocalStorage() {
+    const clients = JSON.parse(localStorage.getItem("clients")) || [];
+    const travels = JSON.parse(localStorage.getItem("travels")) || [];
+    const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+    clients.forEach(c => {
+        arrayClient.push(c);
+        tableClients.querySelector("tbody").innerHTML += `
+            <tr>
+                <td>${c.name}</td>
+                <td>${c.surname}</td>
+                <td>${c.email}</td>
+                <td>${c.pNumber}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-client" data-id="${c.id}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        selClient.innerHTML += `
+            <option value="${c.id}">${c.name} ${c.surname}</option>
+        `;
+    });
+
+    travels.forEach(t => {
+        arrayTravel.push(t);
+        tableTravels.querySelector("tbody").innerHTML += `
+            <tr>
+                <td>${t.code}</td>
+                <td>${t.destination}</td>
+                <td>${t.price}</td>
+                <td>${t.type}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-travel" data-id="${t.id}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        selTravel.innerHTML += `
+            <option value="${t.id}">${t.code} - ${t.destination}</option>
+        `;
+    });
+
+    bookings.forEach(b => {
+        const client = arrayClient.find(c => c.id === b.clientId);
+        const travel = arrayTravel.find(t => t.id === b.travelId);
+        if (client && travel) {
+            arrayBooking.push(b);
+            tableBookings.querySelector("tbody").innerHTML += `
+                <tr>
+                    <td>${client.name} ${client.surname}</td>
+                    <td>${travel.code} - ${travel.destination}</td>
+                    <td>${b.date}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-booking" data-id="${b.id}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+    });
+}
+
+loadFromLocalStorage();
