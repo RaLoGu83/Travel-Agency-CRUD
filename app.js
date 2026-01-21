@@ -26,6 +26,19 @@ class Client {
     }
 }
 
+class Booking {
+    constructor(client, travel) {
+        this.id = Date.now();
+        this.client = client;
+        this.travel = travel;
+        this.date = new Date().toLocaleDateString();
+    }
+
+    getResumen() {
+        return `${this.client.getResumen()} - Booked: ${this.travel.getInfo()}`;
+    }
+}
+
 let arrayClient = [];
 let arrayTravel = [];
 let arrayBooking = [];
@@ -57,11 +70,13 @@ btnAddTravel.addEventListener("click", addTravel);
 btnAddBooking.addEventListener("click", addBooking);
 
 function addClient() {
+    // Impone que los campos estén rellenos
     if (!nameInput.value || !surnameInput.value || !emailInput.value || !pNumberInput.value) {
         alert("Fill all CLIENT fields");
         return;
     }
 
+    // Crea un nuevo cliente con sus valores
     const client = new Client(
         nameInput.value,
         surnameInput.value,
@@ -69,8 +84,11 @@ function addClient() {
         pNumberInput.value
     );
 
+    // Guarda en array
     arrayClient.push(client);
 
+    // Crea la fila con los datos del cliente en la tabla cliente
+    // El delete guarda la id para poder eliminar el cliente posteriormente
     tableClients.querySelector("tbody").innerHTML += `
         <tr>
             <td>${client.name}</td>
@@ -85,17 +103,20 @@ function addClient() {
         </tr>
     `;
 
+    // Añade al select de booking
     selClient.innerHTML += `
         <option value="${client.id}">
             ${client.name} ${client.surname}
         </option>
     `;
 
+    // Limpia los inputs
     nameInput.value = "";
     surnameInput.value = "";
     emailInput.value = "";
     pNumberInput.value = "";
 
+    // Guarda la información localmente
     saveToLocalStorage();
 }
 
@@ -151,19 +172,14 @@ function addBooking() {
     const client = arrayClient.find(c => c.id == selClient.value);
     const travel = arrayTravel.find(t => t.id == selTravel.value);
 
-    const booking = {
-        id: Date.now(),
-        clientId: client.id,
-        travelId: travel.id,
-        date: new Date().toLocaleDateString()
-    };
+    const booking = new Booking(client, travel);
 
     arrayBooking.push(booking);
 
     tableBookings.querySelector("tbody").innerHTML += `
         <tr>
-            <td>${client.name} ${client.surname}</td>
-            <td>${travel.code} - ${travel.destination}</td>
+            <td>${booking.client.name} ${booking.client.surname}</td>
+            <td>${booking.travel.code} - ${booking.travel.destination}</td>
             <td>${booking.date}</td>
             <td>
                 <button class="btn btn-danger btn-sm delete-booking" data-id="${booking.id}">
@@ -211,9 +227,9 @@ tableBookings.addEventListener("click", e => {
 
         arrayBooking = arrayBooking.filter(b => b.id !== id);
         e.target.closest("tr").remove();
-    }
 
-    saveToLocalStorage();
+        saveToLocalStorage();
+    }
 });
 
 function saveToLocalStorage() {
@@ -270,24 +286,30 @@ function loadFromLocalStorage() {
     });
 
     bookings.forEach(b => {
-        const client = arrayClient.find(c => c.id === b.clientId);
-        const travel = arrayTravel.find(t => t.id === b.travelId);
+        const client = arrayClient.find(c => c.id === b.client.id);
+        const travel = arrayTravel.find(t => t.id === b.travel.id);
         if (client && travel) {
-            arrayBooking.push(b);
+            const booking = new Booking(client, travel);
+            booking.id = b.id;
+            booking.date = b.date;
+
+            arrayBooking.push(booking);
+
             tableBookings.querySelector("tbody").innerHTML += `
-                <tr>
-                    <td>${client.name} ${client.surname}</td>
-                    <td>${travel.code} - ${travel.destination}</td>
-                    <td>${b.date}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm delete-booking" data-id="${b.id}">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `;
+            <tr>
+                <td>${booking.client.name} ${booking.client.surname}</td>
+                <td>${booking.travel.code} - ${booking.travel.destination}</td>
+                <td>${booking.date}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-booking" data-id="${booking.id}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
         }
     });
+
 }
 
 loadFromLocalStorage();
