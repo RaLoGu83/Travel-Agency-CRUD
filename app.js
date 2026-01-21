@@ -73,7 +73,6 @@ function addTravel() {
     const newTravel = new travel(code, destination, price, type);
     arrayTravel.push(newTravel);
 
-    // TABLA
     const row = document.createElement("tr");
     row.innerHTML = `
         <td>${code}</td>
