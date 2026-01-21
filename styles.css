@@ -17,7 +17,7 @@ h2{
     gap: 2%;
 }
 
-#dropdownDiv{
+#selectDiv{
     display: flex;
     gap: 2%;
     margin-bottom: 1%;
