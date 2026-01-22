@@ -69,10 +69,34 @@ btnAddClient.addEventListener("click", addClient);
 btnAddTravel.addEventListener("click", addTravel);
 btnAddBooking.addEventListener("click", addBooking);
 
+function validEmail() {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) {
+        alert('Introduce un correo electrónico válido.');
+        emailInput.focus();
+        return false;
+    }
+    return true;
+}
+
 function addClient() {
     // Impone que los campos estén rellenos
     if (!nameInput.value || !surnameInput.value || !emailInput.value || !pNumberInput.value) {
         alert("Fill all CLIENT fields");
+        return;
+    }
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexEmail.test(emailInput.value)) {
+        alert("Not a valid email");
+        emailInput.focus();
+        return;
+    }
+
+    const regexTel = /^(\+\d{1,3}\s?)?(\(\d{3}\)|\d{3})[\s-]?\d{3}[\s-]?\d{3}$/;
+    if (!regexTel.test(pNumberInput.value)){
+        alert("Not a valid Phone Number");
+        pNumberInput.focus();
         return;
     }
 
@@ -139,7 +163,7 @@ function addTravel() {
         <tr>
             <td>${travel.code}</td>
             <td>${travel.destination}</td>
-            <td>${travel.price}</td>
+            <td>${travel.price}€</td>
             <td>${travel.type}</td>
             <td>
                 <button class="btn btn-danger btn-sm delete-travel" data-id="${travel.id}">
@@ -243,6 +267,7 @@ function loadFromLocalStorage() {
     const travels = JSON.parse(localStorage.getItem("travels")) || [];
     const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
+    // Para cada cliente se crea su fila con los valores del cliente. Lo mismo con Viajes y Reservas
     clients.forEach(c => {
         arrayClient.push(c);
         tableClients.querySelector("tbody").innerHTML += `
@@ -270,7 +295,7 @@ function loadFromLocalStorage() {
             <tr>
                 <td>${t.code}</td>
                 <td>${t.destination}</td>
-                <td>${t.price}</td>
+                <td>${t.price}€</td>
                 <td>${t.type}</td>
                 <td>
                     <button class="btn btn-danger btn-sm delete-travel" data-id="${t.id}">
