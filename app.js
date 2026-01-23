@@ -69,16 +69,6 @@ btnAddClient.addEventListener("click", addClient);
 btnAddTravel.addEventListener("click", addTravel);
 btnAddBooking.addEventListener("click", addBooking);
 
-function validEmail() {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-        alert('Introduce un correo electrónico válido.');
-        emailInput.focus();
-        return false;
-    }
-    return true;
-}
-
 function addClient() {
     // Impone que los campos estén rellenos
     if (!nameInput.value || !surnameInput.value || !emailInput.value || !pNumberInput.value) {
